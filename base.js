@@ -22,7 +22,6 @@ function initialize() {
     var children = preview.children;
     var times = children.length;
     for(var i = 0; i < times; i++) {
-      console.log(children.length);
       document.body.appendChild(preview.removeChild(children[0]));
     }
   }
