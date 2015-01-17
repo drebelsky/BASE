@@ -26,4 +26,11 @@ function initialize() {
     }
     files.value = "";
   }
+  var newButton = document.getElementById("newButton");
+  newButton.onclick = function() {
+    var active = this.getAttribute("data-active") === "true";
+    this.setAttribute("data-active", active ? "false" : "true");
+    document.getElementById("fileDialog").style.display = active ? "none" : "block";
+    this.style.backgroundColor = active ? "" : "red";
+  }
 }
