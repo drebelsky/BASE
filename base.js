@@ -1,6 +1,6 @@
 document.body.onload = initialize;
 function initialize() {
-  var files = document.getElementById("files");
+  files = document.getElementById("files");
   files.onchange = function() {
     var length = this.files.length;
     var fileReaders  = [];
@@ -24,5 +24,6 @@ function initialize() {
     for(var i = 0; i < times; i++) {
       document.body.appendChild(preview.removeChild(children[0]));
     }
+    files.value = "";
   }
 }
