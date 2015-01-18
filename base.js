@@ -38,6 +38,7 @@ function initialize() {
     document.getElementById("fileDialog").style.display = active ? "none" : "block";
     this.style.backgroundColor = active ? "" : "red";
   }
+  var lastX = 0;
   var timeline = document.getElementById("timeline");
   var timelineContext = timeline.getContext("2d");
   timeline.width = window.innerWidth * .95;
@@ -50,13 +51,19 @@ function initialize() {
     }
   }
   drawFrameSeperators();
-  timeline.onmousemove = function(event) {
+  function updateTimeline(event) {
+    var x = event ? event.pageX : lastX;
+    lastX = x;
     var frames = parseInt(document.getElementById("frames").value);
     timeline.width = window.innerWidth * .95;
     timeline.height = window.innerHeight / 20;
-    timelineContext.clearRect(0, 0, this.width, this.height);
+    timelineContext.clearRect(0, 0, timeline.width, timeline.height);
     drawFrameSeperators();
     timelineContext.fillStyle = "yellow";
-    timelineContext.fillRect(Math.round(event.pageX / this.width * frames) * this.width/frames, 0, 1, this.height);
+    timelineContext.fillRect(Math.round(x / timeline.width * frames) * timeline.width/frames, 0, 1, timeline.height);
+  }
+  timeline.onmousemove = updateTimeline;
+  document.getElementById("frames").onchange = function() {
+    updateTimeline();
   }
 }
