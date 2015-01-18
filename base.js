@@ -1,3 +1,4 @@
+var objects = [];
 document.body.onload = initialize;
 function initialize() {
   var files = document.getElementById("files");
@@ -27,8 +28,12 @@ function initialize() {
     preview = document.getElementById("previewImages");
     var children = preview.children;
     var times = children.length;
+    var newObject;
     for(var i = 0; i < times; i++) {
-      document.body.appendChild(preview.removeChild(children[0]).children[0]);
+      newObject = preview.removeChild(children[0]).children[0];
+      newObject.setAttribute("data-spot", objects.length);
+      objects.push([]);
+      document.body.appendChild(newObject);
     }
   }
   var newButton = document.getElementById("newButton");
