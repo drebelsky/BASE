@@ -38,4 +38,13 @@ function initialize() {
     document.getElementById("fileDialog").style.display = active ? "none" : "block";
     this.style.backgroundColor = active ? "" : "red";
   }
+  var timeline = document.getElementById("timeline");
+  var timelineContext = timeline.getContext("2d");
+  timeline.onmousemove = function(event) {
+    timeline.width = window.innerWidth;
+    timeline.height = window.innerHeight / 20;
+    timelineContext.clearRect(0, 0, this.width, this.height);
+    timelineContext.fillStyle = "yellow";
+    timelineContext.fillRect(event.pageX, 0, 1, this.height);
+  }
 }
