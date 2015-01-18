@@ -20,6 +20,7 @@ function initialize() {
         fileReaders[fileIndex].readAsDataURL(this.files[fileIndex]);
       }
     }
+    files.value = "";
   }
   var add = document.getElementById("add");
   add.onclick = function() {
@@ -29,7 +30,6 @@ function initialize() {
     for(var i = 0; i < times; i++) {
       document.body.appendChild(preview.removeChild(children[0]).children[0]);
     }
-    files.value = "";
   }
   var newButton = document.getElementById("newButton");
   newButton.onclick = function() {
