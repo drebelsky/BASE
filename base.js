@@ -11,6 +11,9 @@ function initialize() {
         var image = document.createElement("img");
         image.src = this.result;
         imageContainer.appendChild(image);
+        imageContainer.onclick = function() {
+          this.parentNode.removeChild(this);
+        }
         document.getElementById("previewImages").appendChild(imageContainer);
       }
       if(this.files[fileIndex]) {
