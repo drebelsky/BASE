@@ -40,11 +40,23 @@ function initialize() {
   }
   var timeline = document.getElementById("timeline");
   var timelineContext = timeline.getContext("2d");
+  timeline.width = window.innerWidth * .95;
+  timeline.height = window.innerHeight / 20;
+  function drawFrameSeperators() {
+    var frames = parseInt(document.getElementById("frames").value);
+    timelineContext.fillStyle = "lightgrey";
+    for(var x=0; x < timeline.width; x += (timeline.width/frames)) {
+      timelineContext.fillRect(x, 0, 1, timeline.height);
+    }
+  }
+  drawFrameSeperators();
   timeline.onmousemove = function(event) {
-    timeline.width = window.innerWidth;
+    var frames = parseInt(document.getElementById("frames").value);
+    timeline.width = window.innerWidth * .95;
     timeline.height = window.innerHeight / 20;
     timelineContext.clearRect(0, 0, this.width, this.height);
+    drawFrameSeperators();
     timelineContext.fillStyle = "yellow";
-    timelineContext.fillRect(event.pageX, 0, 1, this.height);
+    timelineContext.fillRect(Math.round(event.pageX / this.width * frames) * this.width/frames, 0, 1, this.height);
   }
 }
