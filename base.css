@@ -43,10 +43,17 @@
   width: 100%;
 }
 #timeline {
-  width: 100%;
+  width: 95%;
   height: 5%;
   top: 95%;
   left: 0%;
   position: absolute;
   background-color: black;
+}
+#frames {
+  width: 5%;
+  height: 5%;
+  top: 95%;
+  left: 95%;
+  position: absolute;
 }
