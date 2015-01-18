@@ -7,9 +7,11 @@ function initialize() {
     for(var fileIndex = 0; fileIndex < length; fileIndex++) {
       fileReaders.push(new FileReader());
       fileReaders[fileIndex].onloadend = function() {
+        var imageContainer = document.createElement("div");
         var image = document.createElement("img");
         image.src = this.result;
-        document.getElementById("previewImages").appendChild(image);
+        imageContainer.appendChild(image);
+        document.getElementById("previewImages").appendChild(imageContainer);
       }
       if(this.files[fileIndex]) {
         fileReaders[fileIndex].readAsDataURL(this.files[fileIndex]);
@@ -22,7 +24,7 @@ function initialize() {
     var children = preview.children;
     var times = children.length;
     for(var i = 0; i < times; i++) {
-      document.body.appendChild(preview.removeChild(children[0]));
+      document.body.appendChild(preview.removeChild(children[0]).children[0]);
     }
     files.value = "";
   }
