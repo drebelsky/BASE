@@ -42,7 +42,7 @@ function initialize() {
         active = parseInt(this.getAttribute("data-position"));
         drawFrameSeperators();
       }
-      document.body.appendChild(newObject);
+      document.getElementById("work").appendChild(newObject);
     }
   }
   var newButton = document.getElementById("newButton");
@@ -137,7 +137,8 @@ document.body.onmousemove = function(event) {
       activeNode.style.webkitTransform = "rotate("+degrees+"deg)";
     }
     if(key == "g") {
-
+      activeNode.style.left = event.pageX - activeNode.width / 2;
+      activeNode.style.top = event.pageY - activeNode.height / 2;
     }
     if(key == "s") {
 
