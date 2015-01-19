@@ -141,7 +141,23 @@ document.body.onmousemove = function(event) {
       activeNode.style.top = event.pageY - activeNode.height / 2;
     }
     if(key == "s") {
-
+      if(!event.shiftKey) {
+        var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageX);
+        var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
+        activeNode.width = xDistance * 2;
+        activeNode.height = yDistance * 2;
+        activeNode.style.left = center.x - xDistance;
+        activeNode.style.top = center.y - yDistance;
+      }
+      else {
+        var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageY);
+        var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
+        var distance = Math.max(xDistance, yDistance);
+        activeNode.width = distance * 2;
+        activeNode.height = distance * 2;
+        activeNode.style.left = center.x - distance;
+        activeNode.style.top = center.y - distance;
+      }
     }
   }
 }
