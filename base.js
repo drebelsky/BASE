@@ -124,7 +124,7 @@ document.body.onkeyup = function(event) {
 document.body.onmousemove = function(event) {
   if(active != -1 && key != "") {
     var activeNode = htmlObjects[active]
-    var center = {x: activeNode.style.left + activeNode.width / 2, y: activeNode.style.top + activeNode.height / 2};
+    var center = {x: parseInt(activeNode.style.left+0) + activeNode.width / 2, y: parseInt(activeNode.style.top+0) + activeNode.height / 2};
     if(key == "r") {
       var rotation;
       if(event.pageX < center.x) {
