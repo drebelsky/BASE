@@ -36,11 +36,11 @@ function playAnimation() {
         var pastFrame = activeObject[lowerBound]
         if(upperBound != -1) {
           var futureFrame = activeObject[upperBound]
-          activeNode.style.left = pastFrame.position.x + (futureFrame.position.x - pastFrame.position.x)/(upperBound-lowerBound)*playbackFrame;
-          activeNode.style.top = pastFrame.position.y + (futureFrame.position.y - pastFrame.position.y)/(upperBound-lowerBound)*playbackFrame;
-          activeNode.style.webkitTransform = "rotate("+(pastFrame.rotation + (futureFrame.rotation - pastFrame.rotation)/(upperBound-lowerBound)*playbackFrame)+"deg)";
-          activeNode.width = pastFrame.size.width + (futureFrame.size.width - pastFrame.size.width)/(upperBound-lowerBound)*playbackFrame;
-          activeNode.height = pastFrame.size.height + (futureFrame.size.height - pastFrame.size.height)/(upperBound-lowerBound)*playbackFrame;
+          activeNode.style.left = pastFrame.position.x + (futureFrame.position.x - pastFrame.position.x)/(upperBound-lowerBound)*(playbackFrame-lowerBound);
+          activeNode.style.top = pastFrame.position.y + (futureFrame.position.y - pastFrame.position.y)/(upperBound-lowerBound)*(playbackFrame-lowerBound);
+          activeNode.style.webkitTransform = "rotate("+(pastFrame.rotation + (futureFrame.rotation - pastFrame.rotation)/(upperBound-lowerBound)*(playbackFrame-lowerBound))+"deg)";
+          activeNode.width = pastFrame.size.width + (futureFrame.size.width - pastFrame.size.width)/(upperBound-lowerBound)*(playbackFrame-lowerBound);
+          activeNode.height = pastFrame.size.height + (futureFrame.size.height - pastFrame.size.height)/(upperBound-lowerBound)*(playbackFrame-lowerBound);
         }
         else {
           activeNode.style.left = pastFrame.position.x;
