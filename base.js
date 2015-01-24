@@ -2,6 +2,62 @@ var objects = [];
 var htmlObjects = [];
 var active = -1;
 var key = "";
+var currentFrame = 0;
+var isPlaying = false;
+var playbackFrame = 0;
+var lastX = 0;
+function playAnimation() {
+  var frames = parseInt(document.getElementById("frames").value);
+  if(isPlaying && playbackFrame < frames) {
+    var activeObject;
+    var activeNode;
+    var lowerBound;
+    var upperBound;
+    var checkFrame;
+    for(var objectIndex = 0; objectIndex<objects.length; objectIndex++) {
+      lowerBound = -1;
+      upperBound = -1;
+      checkFrame = playbackFrame;
+      activeObject = objects[objectIndex];
+      activeNode = htmlObjects[objectIndex];
+      while(lowerBound == -1 && checkFrame < activeObject.length) {
+        if(activeObject[checkFrame] != undefined) {
+          lowerBound = checkFrame;
+        }
+        checkFrame++;
+      }
+      while(upperBound == -1 && checkFrame < activeObject.length) {
+        if(activeObject[checkFrame] != undefined) {
+          upperBound = checkFrame;
+        }
+        checkFrame++;
+      }
+      if(lowerBound != -1) {
+        var pastFrame = activeObject[lowerBound]
+        if(upperBound != -1) {
+          var futureFrame = activeObject[upperBound]
+          activeNode.style.left = pastFrame.position.x + (futureFrame.position.x - pastFrame.position.x)/(upperBound-lowerBound)*playbackFrame;
+          activeNode.style.top = pastFrame.position.y + (futureFrame.position.y - pastFrame.position.y)/(upperBound-lowerBound)*playbackFrame;
+          activeNode.style.webkitTransform = "rotate("+(pastFrame.rotation + (futureFrame.rotation - pastFrame.rotation)/(upperBound-lowerBound)*playbackFrame)+"deg)";
+          activeNode.width = pastFrame.size.width + (futureFrame.size.width - pastFrame.size.width)/(upperBound-lowerBound)*playbackFrame;
+          activeNode.height = pastFrame.size.height + (futureFrame.size.height - pastFrame.size.height)/(upperBound-lowerBound)*playbackFrame;
+        }
+        else {
+          activeNode.style.left = pastFrame.position.x;
+          activeNode.style.top = pastFrame.position.y;
+          activeNode.style.webkitTransform = "rotate("+pastFrame+"deg)";
+          activeNode.width = pastFrame.size.width;
+          activeNode.height = pastFrame.size.height;
+        }
+      }
+    }
+    playbackFrame++;
+    requestAnimationFrame(playAnimation);
+  }
+  else {
+    isPlaying = false;
+  }
+}
 document.body.onload = initialize;
 function initialize() {
   var files = document.getElementById("files");
@@ -61,11 +117,11 @@ function initialize() {
     var frames = parseInt(document.getElementById("frames").value);
     timelineContext.fillStyle = "lightgrey";
     if(active != -1) {
-      for(var x=0; x < timeline.width; x += (timeline.width/frames)) {
+      for(var x=0; x < frames; x++) {
         if(objects[active][x] != undefined) {
           timelineContext.fillStyle = "yellow";
         }
-        timelineContext.fillRect(x, 0, 1, timeline.height);
+        timelineContext.fillRect(x * (timeline.width/frames), 0, 1, timeline.height);
         timelineContext.fillStyle = "lightgrey";
       }
     }
@@ -74,18 +130,19 @@ function initialize() {
         timelineContext.fillRect(x, 0, 1, timeline.height);
       }
     }
+    timelineContext.fillStyle = "green";
+    timelineContext.fillRect(currentFrame * timeline.width/frames, 0, 1, timeline.height);
   }
   drawFrameSeperators();
   function updateTimeline(event) {
     var x = event ? event.pageX : lastX;
     lastX = x;
     var frames = parseInt(document.getElementById("frames").value);
+    currentFrame = Math.round(x / timeline.width * frames);
     timeline.width = window.innerWidth * .95;
     timeline.height = window.innerHeight / 20;
     timelineContext.clearRect(0, 0, timeline.width, timeline.height);
     drawFrameSeperators();
-    timelineContext.fillStyle = "green";
-    timelineContext.fillRect(Math.round(x / timeline.width * frames) * timeline.width/frames, 0, 1, timeline.height);
   }
   timeline.onmousemove = updateTimeline;
   document.getElementById("frames").onchange = function() {
@@ -108,6 +165,29 @@ document.body.onkeydown = function(event) {
   if(keycode == 83) {
     key = "s";
   }
+  if(keycode == 73) {
+    if(active != -1) {
+      var activeNode = htmlObjects[active];
+      var rotation = parseFloat(activeNode.style.webkitTransform.replace("rotate(", "").replace("deg)", "") || 0);
+      var x = parseFloat(activeNode.style.left || 0);
+      var y = parseFloat(activeNode.style.top || 0);
+      var position = {x: x, y: y};
+      var size = {width: activeNode.width, height: activeNode.height};
+      objects[active][currentFrame] = {rotation: rotation, position: position, size: size};
+    }
+    key = "";
+  }
+  if(keycode == 32) {
+    key = "";
+    if(isPlaying) {
+      isPlaying = false;
+    }
+    else {
+      isPlaying = true;
+      playbackFrame = 0;
+      playAnimation();
+    }
+  }
 }
 document.body.onkeyup = function(event) {
   var keycode = event.which || event.keyCode || event.charCode;
@@ -122,7 +202,7 @@ document.body.onkeyup = function(event) {
   }
 }
 document.body.onmousemove = function(event) {
-  if(active != -1 && key != "") {
+  if(active != -1 && key != "" && !isPlaying) {
     var activeNode = htmlObjects[active]
     var center = {x: parseInt(activeNode.style.left+0) + activeNode.width / 2, y: parseInt(activeNode.style.top+0) + activeNode.height / 2};
     if(key == "r") {
