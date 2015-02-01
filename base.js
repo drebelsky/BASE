@@ -8,6 +8,8 @@ var playbackFrame = 0;
 var lastX = 0;
 function playAnimation() {
   var frames = parseInt(document.getElementById("frames").value);
+  currentFrame = playbackFrame;
+  drawFrameSeperators();
   if(isPlaying && playbackFrame < frames) {
     var activeObject;
     var activeNode;
@@ -113,7 +115,7 @@ function initialize() {
   var timelineContext = timeline.getContext("2d");
   timeline.width = window.innerWidth * .95;
   timeline.height = window.innerHeight / 20;
-  function drawFrameSeperators() {
+  window.drawFrameSeperators = function drawFrameSeperators() {
     var frames = parseInt(document.getElementById("frames").value);
     timelineContext.fillStyle = "lightgrey";
     if(active != -1) {
