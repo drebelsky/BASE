@@ -186,7 +186,6 @@ document.body.onkeydown = function(event) {
     }
     else {
       isPlaying = true;
-      playbackFrame = 0;
       playAnimation();
     }
   }
