@@ -185,6 +185,7 @@ document.body.onkeydown = function(event) {
       isPlaying = false;
     }
     else {
+      playbackFrame = currentFrame;
       isPlaying = true;
       playAnimation();
     }
