@@ -22,12 +22,13 @@ function playAnimation() {
       checkFrame = playbackFrame;
       activeObject = objects[objectIndex];
       activeNode = htmlObjects[objectIndex];
-      while(lowerBound == -1 && checkFrame < activeObject.length) {
+      while(lowerBound == -1 && checkFrame >= 0) {
         if(activeObject[checkFrame] != undefined) {
           lowerBound = checkFrame;
         }
-        checkFrame++;
+        checkFrame--;
       }
+      checkFrame = playbackFrame + 1;
       while(upperBound == -1 && checkFrame < activeObject.length) {
         if(activeObject[checkFrame] != undefined) {
           upperBound = checkFrame;
