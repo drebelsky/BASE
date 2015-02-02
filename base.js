@@ -217,6 +217,10 @@ document.body.onmousemove = function(event) {
         rotation = Math.atan((event.pageY - center.y) / (event.pageX-center.x)) + Math.PI / 2;
       }
       var degrees = rotation * 180 / Math.PI;
+      var increment = (event.shiftKey + event.altKey) * 5;
+      if(increment > 0) {
+        degrees = Math.round(degrees / increment)*increment;
+      }
       activeNode.style.webkitTransform = "rotate("+degrees+"deg)";
     }
     if(key == "g") {
