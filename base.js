@@ -147,7 +147,13 @@ function initialize() {
     timelineContext.clearRect(0, 0, timeline.width, timeline.height);
     drawFrameSeperators();
   }
-  timeline.onmousemove = updateTimeline;
+  timeline.onmousedown = function(event) {
+    updateTimeline(event);
+    timeline.onmousemove = updateTimeline;
+  };
+  timeline.onmouseup = function(event) {
+    timeline.onmousemove = function(){};
+  }
   document.getElementById("frames").onchange = function() {
     for(var objectIndex = 0; objectIndex < objects.length; objectIndex++) {
       if(objects[objectIndex].length < parseInt(this.value)) {
