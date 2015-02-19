@@ -101,7 +101,7 @@ function initialize() {
         active = parseInt(this.getAttribute("data-position"));
         drawFrameSeperators();
       }
-      document.getElementById("work").appendChild(newObject);
+      document.getElementById("images").appendChild(newObject);
     }
   }
   var newButton = document.getElementById("newButton");
