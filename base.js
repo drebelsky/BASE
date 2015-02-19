@@ -197,6 +197,32 @@ document.body.onkeydown = function(event) {
       playAnimation();
     }
   }
+  if(keycode == 38) {
+    if(active != -1) {
+      var activeNode = htmlObjects[active];
+      if(event.metaKey) {
+        if(event.shiftKey) {
+          activeNode.parentNode.appendChild(activeNode);
+        }
+        else {
+          activeNode.parentNode.insertBefore(activeNode.nextSibling, activeNode);
+        }
+      }
+    }
+  }
+  if(keycode == 40) {
+    if(active != -1) {
+      var activeNode = htmlObjects[active];
+      if(event.metaKey) {
+        if(event.shiftKey) {
+          activeNode.parentNode.insertBefore(activeNode, activeNode.parentNode.children[0]);
+        }
+        else {
+          activeNode.parentNode.insertBefore(activeNode, activeNode.previousSibling);
+        }
+      }
+    }
+  }
 }
 document.body.onkeyup = function(event) {
   var keycode = event.which || event.keyCode || event.charCode;
