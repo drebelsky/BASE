@@ -1,6 +1,6 @@
 var objects = [];
 var htmlObjects = [];
-var active = -1;
+var activeArray = [];
 var key = "";
 var currentFrame = 0;
 var isPlaying = false;
@@ -97,8 +97,19 @@ function initialize() {
       objects.push(new Array(parseInt(document.getElementById("frames").value)));
       htmlObjects.push(newObject);
       document.body.appendChild(newObject);
-      newObject.onclick = function() {
-        active = parseInt(this.getAttribute("data-position"));
+      newObject.onclick = function(event) {
+        var position = parseInt(this.getAttribute("data-position"));
+        if(event.shiftKey) {
+          if(activeArray.indexOf(position) == -1) {
+            activeArray.push(position);
+          }
+          else {
+            activeArray.splice(activeArray.getIndexOf(position), 1);
+          }
+        }
+        else {
+          activeArray = [parseInt(this.getAttribute("data-position"))];
+        }
         drawFrameSeperators();
       }
       document.getElementById("images").appendChild(newObject);
@@ -119,13 +130,17 @@ function initialize() {
   window.drawFrameSeperators = function drawFrameSeperators() {
     var frames = parseInt(document.getElementById("frames").value);
     timelineContext.fillStyle = "lightgrey";
-    if(active != -1) {
-      for(var x=0; x < frames; x++) {
-        if(objects[active][x] != undefined) {
-          timelineContext.fillStyle = "yellow";
+    if(activeArray.length > 0) {
+      var active;
+      for(var activeIndex = 0; activeIndex < activeArray.length; activeIndex++) {
+        active = activeArray[activeIndex];
+        for(var x=0; x < frames; x++) {
+          if(objects[active][x] != undefined) {
+            timelineContext.fillStyle = "yellow";
+          }
+          timelineContext.fillRect(x * (timeline.width/frames), 0, 1, timeline.height);
+          timelineContext.fillStyle = "lightgrey";
         }
-        timelineContext.fillRect(x * (timeline.width/frames), 0, 1, timeline.height);
-        timelineContext.fillStyle = "lightgrey";
       }
     }
     else {
@@ -175,14 +190,18 @@ document.body.onkeydown = function(event) {
     key = "s";
   }
   if(keycode == 73) {
-    if(active != -1) {
-      var activeNode = htmlObjects[active];
-      var rotation = parseFloat(activeNode.style.webkitTransform.replace("rotate(", "").replace("deg)", "") || 0);
-      var x = parseFloat(activeNode.style.left || 0);
-      var y = parseFloat(activeNode.style.top || 0);
-      var position = {x: x, y: y};
-      var size = {width: activeNode.width, height: activeNode.height};
-      objects[active][currentFrame] = {rotation: rotation, position: position, size: size};
+    if(activeArray.length > 0) {
+      var active;
+      for(var activeIndex = 0; activeIndex < activeArray.length; activeIndex++) {
+        active = activeArray[activeIndex];
+        var activeNode = htmlObjects[active];
+        var rotation = parseFloat(activeNode.style.webkitTransform.replace("rotate(", "").replace("deg)", "") || 0);
+        var x = parseFloat(activeNode.style.left || 0);
+        var y = parseFloat(activeNode.style.top || 0);
+        var position = {x: x, y: y};
+        var size = {width: activeNode.width, height: activeNode.height};
+        objects[activeArray][currentFrame] = {rotation: rotation, position: position, size: size};
+      }
     }
     key = "";
   }
@@ -198,27 +217,35 @@ document.body.onkeydown = function(event) {
     }
   }
   if(keycode == 38) {
-    if(active != -1) {
-      var activeNode = htmlObjects[active];
-      if(event.metaKey) {
-        if(event.shiftKey) {
-          activeNode.parentNode.appendChild(activeNode);
-        }
-        else {
-          activeNode.parentNode.insertBefore(activeNode.nextSibling, activeNode);
+    if(activeArray.length > 0) {
+      var active;
+      for(var activeIndex = 0; activeIndex < activeArray.length; activeIndex++) {
+        active = activeArray[activeIndex];
+        var activeNode = htmlObjects[active];
+        if(event.metaKey) {
+          if(event.shiftKey) {
+            activeNode.parentNode.appendChild(activeNode);
+          }
+          else {
+            activeNode.parentNode.insertBefore(activeNode.nextSibling, activeNode);
+          }
         }
       }
     }
   }
   if(keycode == 40) {
-    if(active != -1) {
-      var activeNode = htmlObjects[active];
-      if(event.metaKey) {
-        if(event.shiftKey) {
-          activeNode.parentNode.insertBefore(activeNode, activeNode.parentNode.children[0]);
-        }
-        else {
-          activeNode.parentNode.insertBefore(activeNode, activeNode.previousSibling);
+    if(activeArray.length > 0) {
+      var active;
+      for(var activeIndex = 0; activeIndex < activeArray.length; activeIndex++) {
+        active = activeArray[activeIndex];
+        var activeNode = htmlObjects[active];
+        if(event.metaKey) {
+          if(event.shiftKey) {
+            activeNode.parentNode.insertBefore(activeNode, activeNode.parentNode.children[0]);
+          }
+          else {
+            activeNode.parentNode.insertBefore(activeNode, activeNode.previousSibling);
+          }
         }
       }
     }
@@ -237,45 +264,49 @@ document.body.onkeyup = function(event) {
   }
 }
 document.body.onmousemove = function(event) {
-  if(active != -1 && key != "" && !isPlaying) {
-    var activeNode = htmlObjects[active]
-    var center = {x: parseInt(activeNode.style.left+0) + activeNode.width / 2, y: parseInt(activeNode.style.top+0) + activeNode.height / 2};
-    if(key == "r") {
-      var rotation;
-      if(event.pageX < center.x) {
-        rotation = Math.atan((event.pageY - center.y) / (event.pageX-center.x)) - Math.PI / 2;
+  if(activeArray.length > 0 && key != "" && !isPlaying) {
+    var active;
+    for(var activeIndex = 0; activeIndex < activeArray.length; activeIndex++) {
+      active = activeArray[activeIndex];
+      var activeNode = htmlObjects[active]
+      var center = {x: parseInt(activeNode.style.left+0) + activeNode.width / 2, y: parseInt(activeNode.style.top+0) + activeNode.height / 2};
+      if(key == "r") {
+        var rotation;
+        if(event.pageX < center.x) {
+          rotation = Math.atan((event.pageY - center.y) / (event.pageX-center.x)) - Math.PI / 2;
+        }
+        else {
+          rotation = Math.atan((event.pageY - center.y) / (event.pageX-center.x)) + Math.PI / 2;
+        }
+        var degrees = rotation * 180 / Math.PI;
+        var increment = (event.shiftKey + event.altKey) * 5;
+        if(increment > 0) {
+          degrees = Math.round(degrees / increment)*increment;
+        }
+        activeNode.style.webkitTransform = "rotate("+degrees+"deg)";
       }
-      else {
-        rotation = Math.atan((event.pageY - center.y) / (event.pageX-center.x)) + Math.PI / 2;
+      if(key == "g") {
+        activeNode.style.left = event.pageX - activeNode.width / 2;
+        activeNode.style.top = event.pageY - activeNode.height / 2;
       }
-      var degrees = rotation * 180 / Math.PI;
-      var increment = (event.shiftKey + event.altKey) * 5;
-      if(increment > 0) {
-        degrees = Math.round(degrees / increment)*increment;
-      }
-      activeNode.style.webkitTransform = "rotate("+degrees+"deg)";
-    }
-    if(key == "g") {
-      activeNode.style.left = event.pageX - activeNode.width / 2;
-      activeNode.style.top = event.pageY - activeNode.height / 2;
-    }
-    if(key == "s") {
-      if(!event.shiftKey) {
-        var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageX);
-        var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
-        activeNode.width = xDistance * 2;
-        activeNode.height = yDistance * 2;
-        activeNode.style.left = center.x - xDistance;
-        activeNode.style.top = center.y - yDistance;
-      }
-      else {
-        var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageY);
-        var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
-        var distance = Math.max(xDistance, yDistance);
-        activeNode.width = distance * 2;
-        activeNode.height = distance * 2;
-        activeNode.style.left = center.x - distance;
-        activeNode.style.top = center.y - distance;
+      if(key == "s") {
+        if(!event.shiftKey) {
+          var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageX);
+          var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
+          activeNode.width = xDistance * 2;
+          activeNode.height = yDistance * 2;
+          activeNode.style.left = center.x - xDistance;
+          activeNode.style.top = center.y - yDistance;
+        }
+        else {
+          var xDistance = (event.pageX > center.x) ? (event.pageX - center.x) : (center.x - event.pageY);
+          var yDistance = (event.pageY > center.y) ? (event.pageY - center.y) : (center.y - event.pageY);
+          var distance = Math.max(xDistance, yDistance);
+          activeNode.width = distance * 2;
+          activeNode.height = distance * 2;
+          activeNode.style.left = center.x - distance;
+          activeNode.style.top = center.y - distance;
+        }
       }
     }
   }
