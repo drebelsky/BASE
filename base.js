@@ -101,6 +101,7 @@ function initialize() {
         var position = parseInt(this.getAttribute("data-position"));
         if(event.shiftKey) {
           if(activeArray.indexOf(position) == -1) {
+            htmlObjects[position].className = "active";
             activeArray.push(position);
           }
           else {
@@ -108,7 +109,11 @@ function initialize() {
           }
         }
         else {
+          for(var deactivateIndex = 0; deactivateIndex < activeArray.length; deactivateIndex++) {
+            htmlObjects[activeArray[deactivateIndex]].className = "";
+          }
           activeArray = [parseInt(this.getAttribute("data-position"))];
+          this.className = "active";
         }
         drawFrameSeperators();
       }
