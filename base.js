@@ -76,7 +76,9 @@ function initialize() {
         imageContainer.appendChild(image);
         imageContainer.onclick = function(event) {
           if(event.shiftKey) {
-            this.parentNode.appendChild(this.cloneNode(true));
+            var clone = this.cloneNode(true);
+            clone.onclick = this.onclick;
+            this.parentNode.appendChild(clone);
           }
           else {
             this.parentNode.removeChild(this);
