@@ -74,8 +74,13 @@ function initialize() {
         var image = document.createElement("img");
         image.src = this.result;
         imageContainer.appendChild(image);
-        imageContainer.onclick = function() {
-          this.parentNode.removeChild(this);
+        imageContainer.onclick = function(event) {
+          if(event.shiftKey) {
+            this.parentNode.appendChild(this.cloneNode(true));
+          }
+          else {
+            this.parentNode.removeChild(this);
+          }
         }
         document.getElementById("previewImages").appendChild(imageContainer);
       }
@@ -184,6 +189,7 @@ function initialize() {
   }
 }
 document.body.onkeydown = function(event) {
+  document.getElementById("previewImages").className = event.shiftKey ? "new" : "";
   var keycode = event.which || event.keyCode || event.charCode;
   if(keycode == 82) {
     key = "r";
@@ -257,6 +263,7 @@ document.body.onkeydown = function(event) {
   }
 }
 document.body.onkeyup = function(event) {
+  document.getElementById("previewImages").className = event.shiftKey ? "new" : "";
   var keycode = event.which || event.keyCode || event.charCode;
   if(keycode == 82 && key == "r") {
     key = "";
