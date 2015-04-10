@@ -60,3 +60,6 @@
 #work img{
   position: absolute;
 }
+.active {
+  border: 2px solid blue;
+}
