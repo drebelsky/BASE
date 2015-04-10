@@ -10,6 +10,9 @@
 #previewImages div:hover {
   background-color: red;
 }
+#previewImages.new div:hover {
+  background-color: green;
+}
 #previewImages div:hover img{
 }
 #newButton {
